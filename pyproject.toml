@@ -1,0 +1,22 @@
+[build-system]
+requires = ["setuptools>=69"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "sentinel-rag"
+version = "0.1.0"
+description = "A hardened RAG + MCP pipeline with an offensive/defensive AI security lab"
+requires-python = ">=3.11"
+# NOTE: runtime dependencies live in requirements.in / requirements.txt so we can
+# lock them with hashes (see docs/00-START-HERE.md, section on dependency pinning).
+dependencies = []
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+pythonpath = ["src"]
+testpaths = ["tests"]
+
+[tool.bandit]
+exclude_dirs = ["tests", "redteam"]

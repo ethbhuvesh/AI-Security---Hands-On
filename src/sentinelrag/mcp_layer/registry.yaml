@@ -1,0 +1,42 @@
+servers:
+  docs:
+    version: 0.1.0
+    transport: stdio
+    command: python
+    args:
+    - -m
+    - sentinelrag.mcp_layer.server_docs
+    env_passthrough:
+    - PATH
+    - PYTHONPATH
+    trust_on_first_use: false
+    allowed_tools:
+      list_documents:
+        requires_approval: false
+        max_calls_per_request: 2
+        pin: 46a0d0e0ae25f50ec466be66c6de72dc72c6f4206591d4b7ba8d5c72a339e84a
+      read_document:
+        requires_approval: false
+        max_calls_per_request: 3
+        pin: d3aed999630c3b2bed04e0da93c8526bf051c451a2c9bb85d57dc5b038496a5b
+        arg_rules:
+          path:
+            max_length: 200
+            deny_patterns:
+            - \.\.
+            - ^/
+            - ^~
+            - \x00
+      search_documents:
+        requires_approval: false
+        max_calls_per_request: 3
+        pin: 37652a795de939be07f5ca4c3b9330062168431335bfc721168e2c01fdc1d069
+      current_time:
+        requires_approval: false
+        max_calls_per_request: 1
+        pin: 883879534be7a93651ecd3a60e562c60a4ed1fa3faf2706ca0ca3c46a844d310
+policy:
+  max_total_calls: 4
+  scan_tool_results: true
+  forbid_duplicate_tool_names: true
+  max_description_injection_score: 0.45

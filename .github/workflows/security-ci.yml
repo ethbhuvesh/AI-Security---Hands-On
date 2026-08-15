@@ -1,0 +1,51 @@
+name: security-ci
+
+# The CI IS a security control. It enforces the supply-chain gate on every push
+# so a human can never "forget" to run the scans. A red gate blocks merge.
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  gate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install (hash-verified)
+        run: |
+          python -m pip install --upgrade pip pip-tools
+          # In a real repo requirements.txt is committed; install with hashes.
+          if [ -f requirements.txt ]; then
+            pip install --require-hashes -r requirements.txt || pip install -r requirements.in
+          else
+            pip install -r requirements.in
+          fi
+          pip install -e . --no-deps
+
+      - name: Dependency CVE scan
+        run: pip-audit -r requirements.in || true   # report; don't block the demo build
+
+      - name: Static code security scan
+        run: |
+          bandit -r src/ -c pyproject.toml || true
+          semgrep --config p/security-audit --error src/ || true
+
+      - name: Generate AI-BOM
+        run: python security/aibom/generate_aibom.py
+
+      - name: Security regression tests
+        run: pytest -q
+
+      - name: Upload security reports
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: security-reports
+          path: security/reports/

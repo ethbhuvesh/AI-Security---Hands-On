@@ -1,0 +1,21 @@
+# Pre-commit runs fast security checks on every `git commit`, so problems are
+# caught before they ever reach CI. Install once with:  pre-commit install
+repos:
+  - repo: https://github.com/pre-commit/pre-commit-hooks
+    rev: v4.6.0
+    hooks:
+      - id: check-added-large-files      # stop a 5GB model getting committed
+      - id: detect-private-key           # stop private keys entering git
+      - id: end-of-file-fixer
+      - id: trailing-whitespace
+
+  - repo: https://github.com/Yelp/detect-secrets
+    rev: v1.5.0
+    hooks:
+      - id: detect-secrets                # scan the diff for API keys / tokens
+
+  - repo: https://github.com/PyCQA/bandit
+    rev: 1.7.9
+    hooks:
+      - id: bandit                        # static security analysis of our code
+        args: ["-c", "pyproject.toml", "-r", "src/"]

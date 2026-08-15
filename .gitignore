@@ -1,0 +1,21 @@
+# Secrets -- never commit
+.env
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+*.egg-info/
+.pytest_cache/
+.mypy_cache/
+
+# Data & artifacts (regenerated locally)
+data/chroma/
+data/audit.log
+models/*/
+!models/.gitkeep
+security/reports/
+
+# OS / editor
+.DS_Store
+.vscode/
