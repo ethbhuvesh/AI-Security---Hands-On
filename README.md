@@ -87,7 +87,7 @@ make supply-chain   # AI-BOM + dep CVE scan + code scan + model scan + signature
 
 ## What maps to what
 
-| Résumé clause | Implementation |
+| Concepts | Implementation |
 |---|---|
 | High-performance RAG + Vector DB | `src/sentinelrag/rag/`, `src/sentinelrag/vectorstore/` (Chroma) |
 | MCP for secure tool integration | `src/sentinelrag/mcp_layer/` (pinning, allowlist, approval, result scanning) |
